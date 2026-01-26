@@ -17,6 +17,9 @@
 
   inputs.jeezyvim.url = "github:LGUG2Z/JeezyVim";
 
+  inputs.niri.url = "github:YaLTeR/niri/v25.02";
+  inputs.niri.inputs.nixpkgs.follows = "nixpkgs";
+
   outputs = inputs:
     with inputs; let
       secrets = builtins.fromJSON (builtins.readFile "${self}/secrets.json");

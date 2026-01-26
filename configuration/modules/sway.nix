@@ -7,7 +7,5 @@
   environment.systemPackages = with pkgs; [
     sway
     xwayland
-    fuzzel
-    kitty
   ];
 }

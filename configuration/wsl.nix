@@ -56,10 +56,10 @@
 
   wsl = {
     enable = true;
+    interop.register = true;
     useWindowsDriver=true;
     wslConf.automount.root = "/mnt";
     wslConf.interop.appendWindowsPath = false;
-    interop.register = true;
     wslConf.network.generateHosts = false;
     defaultUser = username;
     startMenuLaunchers = true;
