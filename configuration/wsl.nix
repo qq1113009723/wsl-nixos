@@ -7,6 +7,10 @@
   inputs,
   ...
 }: {
+  imports = [
+    ./modules
+  ];
+  
   # FIXME: change to your tz! look it up with "timedatectl list-timezones"
   time.timeZone = "Asia/Shanghai";
   i18n.defaultLocale = "zh_CN.UTF-8";

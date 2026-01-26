@@ -80,7 +80,7 @@ let
   ];
 in {
   imports = [
-    ./modules/sway-wsl.nix
+    ./home-modules
     nix-index-database.hmModules.nix-index
   ];
 

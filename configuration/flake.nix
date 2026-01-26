@@ -86,7 +86,6 @@
         modules = [
           nixos-wsl.nixosModules.wsl
           ./wsl.nix
-          ./desktop.nix
         ];
       };
     };
