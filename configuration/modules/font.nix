@@ -2,6 +2,7 @@
   # 字体配置
   fonts = {
     packages = with pkgs; [
+      nerd-fonts.jetbrains-mono
       cascadia-code
       noto-fonts
       noto-fonts-cjk-sans  

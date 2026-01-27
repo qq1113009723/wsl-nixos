@@ -115,6 +115,7 @@ in {
     # FIXME: disable this if you don't want to use the starship prompt
     starship.enable = true;
     starship.settings = {
+      scan_timeout = 1000; # in milliseconds
       aws.disabled = true;
       gcloud.disabled = true;
       kubernetes.disabled = false;
