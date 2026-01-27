@@ -37,7 +37,6 @@ let
     wl-clipboard
     libiconv
     vscode-fhs
-    firefox
   ];
 
   stable-packages = with pkgs; [

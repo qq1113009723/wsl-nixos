@@ -131,15 +131,10 @@
       }
 
       window-rule {
-
-          match app-id=r#"^org\.wezfurlong\.wezterm$"#
-          default-column-width {}
-      }
-
-      window-rule {
-
-          match app-id=r#"firefox$"# title="^Picture-in-Picture$"
-          open-floating true
+        geometry-corner-radius 8
+        clip-to-geometry true
+        opacity 0.95
+        draw-border-with-background false 
       }
 
 
