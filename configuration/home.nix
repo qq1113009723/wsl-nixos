@@ -84,7 +84,8 @@ in {
     nix-index-database.hmModules.nix-index
   ];
 
-  home.stateVersion = "22.11";
+  # home.stateVersion = "22.11";
+  home.stateVersion = "25.11";
 
   home = {
     username = "${username}";
@@ -131,7 +132,7 @@ in {
     fzf.enable = true;
     fzf.enableFishIntegration = true;
     lsd.enable = true;
-    lsd.enableAliases = true;
+    lsd.enableFishIntegration = true;
     zoxide.enable = true;
     zoxide.enableFishIntegration = true;
     zoxide.options = ["--cmd cd"];
@@ -139,19 +140,19 @@ in {
     broot.enableFishIntegration = true;
     direnv.enable = true;
     direnv.nix-direnv.enable = true;
-
-    git = {
+    delta = {
       enable = true;
-      package = pkgs.unstable.git;
-      delta.enable = true;
-      delta.options = {
+      options = {
         line-numbers = true;
         side-by-side = true;
         navigate = true;
       };
-      userEmail = ""; # FIXME: set your git email
-      userName = ""; #FIXME: set your git username
-      extraConfig = {
+    };
+    git = {
+      enable = true;
+      package = pkgs.unstable.git;
+ 
+      settings = {
         # FIXME: uncomment the next lines if you want to be able to clone private https repos
         # url = {
         #   "https://oauth2:${secrets.github_token}@github.com" = {
@@ -161,6 +162,10 @@ in {
         #     insteadOf = "https://gitlab.com";
         #   };
         # };
+        user = {
+          name = "";
+          email = "";
+        };
         push = {
           default = "current";
           autoSetupRemote = true;
