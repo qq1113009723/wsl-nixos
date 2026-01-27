@@ -52,7 +52,7 @@
     ];
   };
 
-  system.stateVersion = "22.05";
+  system.stateVersion = "25.11";
 
   wsl = {
     enable = true;
@@ -69,8 +69,8 @@
   };
 
   virtualisation.docker = {
-    enable = true;
-    enableOnBoot = true;
+    enable = false;
+    enableOnBoot = false;
     autoPrune.enable = true;
   };
 

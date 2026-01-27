@@ -11,11 +11,6 @@ export _JAVA_AWT_WM_NONREPARENTING=1
 [ ! -d "$XDG_RUNTIME_DIR" ] && mkdir -p "$XDG_RUNTIME_DIR"
 chmod 700 "$XDG_RUNTIME_DIR"
 
-export LD_LIBRARY_PATH=/usr/lib/wsl/lib:${LD_LIBRARY_PATH:-}
-export __GLX_VENDOR_LIBRARY_NAME=mesa
-export GALLIUM_DRIVER=d3d12
-export MESA_LOADER_DRIVER_OVERRIDE=d3d12
-
 MESA_JSON="/usr/share/glvnd/egl_vendor.d/50_mesa.json"
 [ -f "$MESA_JSON" ] && export __EGL_VENDOR_LIBRARY_FILENAMES="$MESA_JSON"
 
