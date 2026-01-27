@@ -1,8 +1,7 @@
 { pkgs, ... }: {
   imports = [
     ./font.nix
-    ./sway.nix
-    ./niri.nix
+    ./desktop.nix
     ./fcitx5.nix
     ./i18n.nix
   ];

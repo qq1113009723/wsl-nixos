@@ -16,10 +16,6 @@ let
       substituteInPlace src/backend/winit.rs \
         --replace-fail '.with_title("niri")' '.with_decorations(false).with_title("niri")'
 
-      substituteInPlace src/backend/winit.rs \
-        --replace-fail 'let (backend, winit) = winit::init_from_attributes(builder)?;' \
-                       'let (backend, winit) = winit::init_from_attributes(builder)?; backend.window().set_cursor_visible(false);'
-
       if [ -f resources/niri.service ]; then
         substituteInPlace resources/niri.service --replace "/usr/bin/niri" "$out/bin/niri"
       fi
@@ -47,10 +43,6 @@ in
     cosmic-files    
     xdg-desktop-portal-gnome
     xdg-desktop-portal-gtk
+    bibata-cursors
   ] ;
-
-  environment.variables = {
-    __GLX_VENDOR_LIBRARY_NAME = "mesa";  
-    WLR_NO_HARDWARE_CURSORS = "1";
-  };
 }
