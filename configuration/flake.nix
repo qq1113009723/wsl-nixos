@@ -17,6 +17,8 @@
 
   inputs.jeezyvim.url = "github:LGUG2Z/JeezyVim";
 
+  inputs.chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
+
   inputs.niri.url = "github:YaLTeR/niri/v25.11";
   inputs.niri.inputs.nixpkgs.follows = "nixpkgs";
 
@@ -88,6 +90,7 @@
         username = "nixos"; # FIXME: replace with your own username!
         modules = [
           nixos-wsl.nixosModules.wsl
+          chaotic.nixosModules.default
           ./wsl.nix
         ];
       };

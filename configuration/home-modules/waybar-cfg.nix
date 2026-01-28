@@ -60,81 +60,58 @@
     };
 
     style = ''
-      /* 全局重置：确保不占用任何多余像素 */
+      /* 全局重置 */
       * {
           border: none;
           border-radius: 0;
           font-family: "JetBrainsMono Nerd Font", "Source Han Sans SC";
           font-size: 12px;
-          font-weight: 500;
           min-height: 0;
-          margin: 0;
-          padding: 0;
       }
 
-      /* 状态栏主背景：深色半透明 Kvantum 玻璃 */
       window#waybar {
           background: rgba(20, 20, 20, 0.85);
           color: #dcdcdc;
-          border-bottom: 1px solid rgba(255, 255, 255, 0.1); /* 底部极细的高光线 */
+          border-bottom: 1px solid rgba(255, 255, 255, 0.1);
       }
 
-      /* 工作空间：极致压缩宽度 */
-      #workspaces {
-          margin-left: 5px;
+      /* --- 窗口标题 (Apple 风格美化) --- */
+      #window {
+          /* 核心：使用 Inter 模拟 SF Pro，Source Han Sans 模拟萍方 */
+          font-family: "Inter", "Source Han Sans SC", sans-serif;
+          font-size: 13px;       /* 标题稍微大一点点 */
+          font-weight: 600;      /* 苹果风格喜欢用 Semi-bold */
+          color: #ffffff;        /* 纯白文字 */
+          padding: 0 20px;
+          /* 稍微增加一点字间距，更有现代感 */
+          letter-spacing: 0.3px; 
+          /* 移除之前的 font-style: italic */
       }
 
+      /* 工作空间压缩 */
       #workspaces button {
-          padding: 0 6px;      /* 压缩左右内边距 */
+          padding: 0 6px;
           color: #777777;
-          min-width: 20px;     /* 强制窄化下标宽度 */
-          background: transparent;
-          transition: all 0.2s ease;
+          min-width: 20px;
       }
 
-      /* 活动状态：Kvantum 风格的底部蓝色短条或背景 */
       #workspaces button.focused,
       #workspaces button.active {
           color: #ffffff;
           background: rgba(255, 255, 255, 0.1);
-          box-shadow: inset 0 -2px 0 #3498db; /* 底部蓝色高亮指示 */
-          text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+          box-shadow: inset 0 -2px 0 #3498db;
       }
 
-      #workspaces button.urgent {
-          color: #ff5555;
-          background: rgba(255, 85, 85, 0.1);
-      }
-
-      /* 右侧模块：紧凑排列，使用垂直高光线分隔 */
+      /* 右侧模块分割线 */
       #cpu, #memory, #disk, #clock, #tray {
           padding: 0 10px;
-          background: transparent;
-          /* 模拟 Kvantum 的模块分割感 */
           border-left: 1px solid rgba(255, 255, 255, 0.05);
       }
 
-      /* 为特定模块添加微弱的变色效果 */
       #cpu { color: #88c0d0; }
       #memory { color: #a3be8c; }
       #disk { color: #ebcb8b; }
-      #clock { 
-          color: #eceff4; 
-          font-weight: bold;
-          border-right: 1px solid rgba(255, 255, 255, 0.05);
-      }
-
-      /* 窗口标题 */
-      #window {
-          padding: 0 20px;
-          color: rgba(255, 255, 255, 0.9);
-          font-style: italic;
-      }
-
-      /* 托盘样式 */
-      #tray {
-          margin: 0 5px;
-      }
+      #clock { color: #eceff4; font-weight: bold; }
     '';
   };
 }
