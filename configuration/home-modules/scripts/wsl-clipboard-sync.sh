@@ -1,44 +1,62 @@
 #!/bin/bash
 
-# 1. 环境初始化
-export LANG=zh_CN.UTF-8
-export LC_ALL=zh_CN.UTF-8
+# 1. 路径修复
+POWERSHELL_BIN="/mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe"
+if [ ! -f "$POWERSHELL_BIN" ]; then
+    POWERSHELL_BIN=$(which powershell.exe 2>/dev/null)
+fi
 
-# 2. 自动补全 Windows 路径 (NixOS PATH 默认很干净，可能找不到 powershell)
-export PATH=$PATH:/mnt/c/Windows/System32/WindowsPowerShell/v1.0/:/mnt/c/Windows/System32/
+# 杀死旧进程
+pkill -9 -f "GetClipboardSequenceNumber" 2>/dev/null || true
 
-# 3. 等待 Wayland (Sway/Niri) 就绪
-until [ -S "$XDG_RUNTIME_DIR/$WAYLAND_DISPLAY" ]; do
-  sleep 1
-done
+last_linux_content=""
+last_windows_content=""
 
-# 4. 清理旧进程
-pkill -9 -f "wl-paste.*clip.exe" 2>/dev/null || true
+echo "剪贴板同步服务已启动 (Base64 加密传输版)..."
 
-# --- 5. Linux -> Windows ---
-wl-paste -t "text/plain;charset=utf-8" --watch bash -c '
-    cat | iconv -c -f UTF-8 -t UTF-16LE | clip.exe
-' 2>/dev/null &
-
-# --- 6. Windows -> Linux ---
-last_hash=""
 while true; do
-    # 使用较轻量级的 .NET 调用，带编码处理
-    current=$(powershell.exe -NoProfile -NonInteractive -Command \
-        "Add-Type -AssemblyName System.Windows.Forms; 
-         \$content = [System.Windows.Forms.Clipboard]::GetText();
-         if (\$content) { [Console]::OutputEncoding = [System.Text.Encoding]::UTF8; Write-Output \$content } " 2>/dev/null | tr -d '\r')
+    # --- 1. Linux -> Windows (同步中文不乱码的关键) ---
+    current_linux_content=$(wl-paste -n 2>/dev/null)
+    
+    if [[ -n "$current_linux_content" && "$current_linux_content" != "$last_linux_content" ]]; then
+        if [[ "$current_linux_content" != "$last_windows_content" ]]; then
+            # 将内容转为 Base64 发送给 Windows
+            b64_content=$(echo -n "$current_linux_content" | base64 -w 0)
+            
+            # 在 PowerShell 内部解码 Base64 并设置剪贴板
+            "$POWERSHELL_BIN" -NoProfile -NonInteractive -Command \
+                "\$b64 = '$b64_content'; 
+                 \$bytes = [System.Convert]::FromBase64String(\$b64); 
+                 \$text = [System.Text.Encoding]::UTF8.GetString(\$bytes); 
+                 Set-Clipboard -Value \$text" 2>/dev/null
+            
+            last_linux_content="$current_linux_content"
+            # echo "已同步到 Windows: $current_linux_content"
+        fi
+    fi
 
-    if [[ -n "$current" ]]; then
-        current_hash=$(echo -n "$current" | md5sum | awk '{print $1}')
-        if [[ "$current_hash" != "$last_hash" ]]; then
-            # 只有当 Linux 本地不一致时才写入
-            if [[ "$current" != "$(wl-paste -n 2>/dev/null)" ]]; then
-                echo -n "$current" | wl-copy 2>/dev/null
-                echo -n "$current" | wl-copy --primary 2>/dev/null
-                last_hash="$current_hash"
+    # --- 2. Windows -> Linux ---
+    # 同样使用 Base64 获取，确保从 Windows 回传时不乱码
+    win_b64=$("$POWERSHELL_BIN" -NoProfile -NonInteractive -Command \
+        "\$c = Get-Clipboard -Raw; 
+         if (\$c) { 
+             \$bytes = [System.Text.Encoding]::UTF8.GetBytes(\$c); 
+             [Convert]::ToBase64String(\$bytes) 
+         }" 2>/dev/null | tr -d '\r')
+
+    if [ -n "$win_b64" ]; then
+        current_windows_content=$(echo "$win_b64" | base64 -d 2>/dev/null)
+        
+        if [[ "$current_windows_content" != "$last_windows_content" ]]; then
+            if [[ "$current_windows_content" != "$current_linux_content" ]]; then
+                printf "%s" "$current_windows_content" | wl-copy 2>/dev/null
+                printf "%s" "$current_windows_content" | wl-copy --primary 2>/dev/null
+                last_windows_content="$current_windows_content"
+                last_linux_content="$current_windows_content"
+                # echo "已从 Windows 同步"
             fi
         fi
     fi
+
     sleep 1
 done

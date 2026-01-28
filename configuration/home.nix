@@ -36,7 +36,7 @@ let
     yazi
     wl-clipboard
     libiconv
-    vscode-fhs
+    # vscode-fhs
   ];
 
   stable-packages = with pkgs; [
